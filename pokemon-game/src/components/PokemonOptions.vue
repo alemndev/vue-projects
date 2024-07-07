@@ -1,13 +1,25 @@
 <template>
   <div class="options-container">
-    <ul>
-      <li v-for="poke in pokemonArr" :key="poke.id" @click="$emit('select:poke', poke.id)">{{ poke.name }}</li>
+    <ul v-if="!pokeSelected">
+      <li v-for="poke in pokemonArr" :key="poke.id" @click="setPokeSelected(poke.id)">{{ poke.name
+        }}</li>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      pokeSelected: false
+    }
+  },
+  methods: {
+    setPokeSelected(pokeId) {
+      this.$emit('select:poke', pokeId)
+      this.pokeSelected = true
+    }
+  },
   props: {
     pokemonArr: {
       required: true,

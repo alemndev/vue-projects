@@ -7,10 +7,10 @@
     <PokemonPictureVue :pokemon-id="pokemon.id" :show-pokemon="showPokemon" />
     <PokemonOptionsVue :pokemon-arr="pokemonArr" @select:poke="checkAnswer" />
 
-    <template v-if="showAnswer">
-      <h2>{{ message }}</h2>
+    <div v-if="showAnswer" class="answer-container">
+      <h2 :class="correctAnswer ? 'correct' : 'incorrect'">{{ message }}</h2>
       <button @click="newGame">Nuevo juego</button>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -31,7 +31,8 @@ export default {
       pokemon: null,
       showPokemon: false,
       showAnswer: false,
-      message: ''
+      message: '',
+      correctAnswer: false
     }
   },
   methods: {
@@ -41,11 +42,13 @@ export default {
     },
     checkAnswer(pokeId) {
       if (pokeId !== this.pokemon.id) {
+        this.showPokemon = true
         this.message = `Incorrecto, el pokemon correcto era: ${this.pokemon.name}`
         this.showAnswer = true;
         return
       }
 
+      this.correctAnswer = true;
       this.showPokemon = true
       this.message = `Correcto, el pokemon es: ${this.pokemon.name}`
       this.showAnswer = true;
@@ -55,6 +58,7 @@ export default {
       this.pokemonArr = []
       this.showPokemon = false
       this.showAnswer = false
+      this.message = ''
       this.mixPokemonArr()
     }
   },
@@ -64,4 +68,36 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+button {
+  padding: 15px 25px;
+  border-radius: 7px;
+  background: rgb(250, 250, 250);
+  border: 1px solid rgb(145, 145, 145);
+}
+
+button:hover {
+  background: rgb(235, 235, 235);
+}
+
+.answer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  width: max-content;
+  padding: 20px;
+  color: white;
+  border-radius: 10px;
+}
+
+.correct {
+  background-color: rgb(161, 221, 161);
+}
+
+.incorrect {
+  background-color: rgb(226, 163, 163);
+}
+</style>
