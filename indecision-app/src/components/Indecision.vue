@@ -1,5 +1,5 @@
 <template>
-  <img :src="image" alt="bg">
+  <img v-if="image" :src="image" alt="bg">
   <div class="bg-dark"></div>
 
   <div class="indecision-container">
@@ -26,18 +26,25 @@ export default {
   },
   methods: {
     async getAnswer() {
-      this.answer = 'thinking...'
+      try {
+        this.answer = 'thinking...'
 
-      const { answer, image } = await fetch('https://www.yesno.wtf/api')
-      .then(res => res.json())
+        const { answer, image } = await fetch('https://www.yesno.wtf/api')
+          .then(res => res.json())
 
-      this.answer = answer;
-      this.image = image
+        this.answer = answer;
+        this.image = image;
+      } catch (error) {
+        this.answer = 'load API failed.'
+        this.image = null;
+      }
     }
   },
   watch: {
     question(value, _oldValue) {
       this.isValidQuestion = false
+
+      console.log({ value })
 
       if (value.endsWith('?')) {
         this.isValidQuestion = true
